@@ -7,7 +7,8 @@ enableProdMode();
 
 // Registrar el Service Worker si está disponible en el navegador
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/ngsw-worker.js')
+  debugger
+  navigator.serviceWorker.register('./ngsw-worker.js')
     .then(() => console.log('Service Worker registrado correctamente'))
     .catch(err => console.error('Error al registrar el Service Worker', err));
 }
