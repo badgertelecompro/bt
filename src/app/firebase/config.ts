@@ -18,7 +18,6 @@ export const storage = getStorage(app);
 
 
 export function uploadFile(file: Blob  ){
-  debugger
   const storageRef = ref(storage, 'som-child')
   uploadBytes(storageRef,file).then(snapshop=>{
     console.log(snapshop)
