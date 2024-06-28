@@ -1,0 +1,34 @@
+<div style="text-align:center">
+  <div>
+    <webcam
+        [height]="webcamHeight"
+        [width]="webcamWidth"
+        *ngIf="showWebcam"
+        [imageQuality]="1"
+        (imageCapture)="handleImage($event)"
+        [trigger]="triggerObservable"
+        (initError)="handleInitError($event)"
+        >
+    </webcam>
+  </div>
+  <div class="row g-3">
+    <div class="col">
+      <button class="btn btn-primary" (click)="triggerSnapshot();">Take A Snapshot</button>
+    </div>
+    <div class="col">
+      <button class="btn btn-primary" (click)="toggleWebcam();">Toggle Webcam</button>
+    </div>
+  </div>
+
+
+  <div class="snapshot" *ngIf="webcamImage">
+    <h2>Nice one!</h2>
+    <img [src]="webcamImage.imageAsDataUrl"/>
+  </div>
+
+  <h4 *ngIf="errors.length > 0">Messages:</h4>
+  <ul *ngFor="let error of errors">
+    <li>{{error | json}}</li>
+  </ul>
+</div>
+
