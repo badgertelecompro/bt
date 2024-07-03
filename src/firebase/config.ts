@@ -17,9 +17,19 @@ const analytics = getAnalytics(app);
 export const storage = getStorage(app);
 
 
-export function uploadFile(file: Blob  ){
-  const storageRef = ref(storage, 'som-child')
+export function uploadFile(file: Blob ,filePath: string ){
+  const storageRef = ref(storage, filePath)
   uploadBytes(storageRef,file).then(snapshop=>{
     console.log(snapshop)
   })
 }
+
+// export function uploadFile2(file: Blob, filePath: string) {
+//   const storageRef = ref(storage, filePath); // Usar filePath para definir la ruta del archivo
+
+//   uploadBytes(storageRef, file).then(snapshot => {
+//     console.log('File uploaded successfully:', snapshot);
+//   }).catch(error => {
+//     console.error('Error uploading file:', error);
+//   });
+// }

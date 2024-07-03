@@ -8,6 +8,8 @@ import {WebcamModule} from 'ngx-webcam';
 import { FormComponent } from './form/form.component';
 import { CamComponent } from './cam/cam.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { HttpClientModule } from '@angular/common/http';
+import { GlobalDataService } from './global-data.service';
 
 @NgModule({
   declarations: [
@@ -22,12 +24,11 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     WebcamModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
-    })
+    }),
+    HttpClientModule
   ],
-  providers: [],
+  providers: [GlobalDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

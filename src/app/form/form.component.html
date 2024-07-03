@@ -1,1 +1,87 @@
 
+<div *ngIf="ShowUser" class="my-5">
+  <div class="container py-4 px-5 border rounded shadow-sm bg-light">
+    <h1 class="mb-4 text-center">Form</h1>
+    <form (ngSubmit)="onSet()" #userForm="ngForm" novalidate>
+      <div class="form-group mb-3">
+        <label for="name" class="form-label">Name:</label>
+        <input
+          type="text"
+          id="name"
+          class="form-control"
+          [(ngModel)]="name"
+          name="name"
+          required
+          minlength="3"
+          #nameField="ngModel"
+        >
+        <div *ngIf="nameField.invalid && (nameField.dirty || nameField.touched)" class="text-danger mt-1">
+          <small *ngIf="nameField.errors?.['required']">Name is required.</small>
+          <small *ngIf="nameField.errors?.['minlength']">Name must be at least 3 characters long.</small>
+        </div>
+      </div>
+      <div class="form-group mb-3">
+        <label for="email" class="form-label">Email:</label>
+        <input
+          type="email"
+          id="email"
+          class="form-control"
+          [(ngModel)]="email"
+          name="email"
+          required
+          email
+          #emailField="ngModel"
+        >
+        <div *ngIf="emailField.invalid && (emailField.dirty || emailField.touched)" class="text-danger mt-1">
+          <small *ngIf="emailField.errors?.['required']">Email is required.</small>
+          <small *ngIf="emailField.errors?.['email']">Must be a valid email address.</small>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary w-100" [disabled]="userForm.invalid">Save</button>
+    </form>
+  </div>
+</div>
+<div *ngIf="!ShowUser">
+  <div class="container">
+    <h1 class="text-center">List of Jobs Completed</h1>
+    <div class="text-center mb-3">
+      <button *ngIf="showSyncButton" class="btn btn-outline-primary" (click)="syncData()">
+        <i class="fas fa-sync-alt mr-1"></i> Sync Data
+      </button>
+      <div class="text-center mb-3">
+        <button class="btn btn-success" (click)="exportToExcel()">Export to Excel</button>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table *ngIf="documents && documents.length > 0" class="table table-striped">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>GPS Location</th>
+            <th>Ped Type</th>
+            <th>Trench</th>
+            <th>Trench Footage</th>
+            <th>File Path</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let document of documents">
+            <td>{{ document.date }}</td>
+            <td>{{ document.address }}</td>
+            <td>{{ document.email }}</td>
+            <td>{{ document.name }}</td>
+            <td>{{ document.gpsLocation }}</td>
+            <td>{{ document.pedType }}</td>
+            <td>{{ document.trench }}</td>
+            <td>{{ document.trenchFootage }}</td>
+            <td>{{ document.filePath }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <button (click)="onSumit()" class="btn btn-primary btn-register">Register New Job</button>
+  </div>
+</div>

@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:href": "ng build --configuration production --base-href ./ && http-server -p 8080 -c-1 dist/badgertelecompro/browser -o",
+    "build:href": "rimraf dist && ng build --configuration production --base-href ./ && http-server -p 8080 -c-1 dist/badgertelecompro/browser -o",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -20,9 +20,14 @@
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
     "@angular/service-worker": "^17.3.0",
+    "express": "^4.19.2",
+    "firebase": "^10.12.2",
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.4.4",
     "ngx-webcam": "^0.4.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "xlsx": "^0.18.5",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {
@@ -30,6 +35,7 @@
     "@angular/cli": "^17.3.7",
     "@angular/compiler-cli": "^17.3.0",
     "@types/jasmine": "~5.1.0",
+    "@types/mongoose": "^5.11.97",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",

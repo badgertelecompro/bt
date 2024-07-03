@@ -1,34 +1,132 @@
-<div style="text-align:center">
-  <div>
-    <webcam
+<div class="container my-4 p-3 border rounded">
+  <!-- Webcam Section -->
+  <div *ngIf="showWebcam" class="text-center">
+    <div class="mb-3">
+      <webcam
         [height]="webcamHeight"
         [width]="webcamWidth"
-        *ngIf="showWebcam"
         [imageQuality]="1"
         (imageCapture)="handleImage($event)"
         [trigger]="triggerObservable"
         (initError)="handleInitError($event)"
-        >
-    </webcam>
-  </div>
-  <div class="row g-3">
-    <div class="col">
-      <button class="btn btn-primary" (click)="triggerSnapshot();">Take A Snapshot</button>
+        class="d-block mx-auto"
+      ></webcam>
     </div>
-    <div class="col">
-      <button class="btn btn-primary" (click)="toggleWebcam();">Toggle Webcam</button>
+    <div class="mt-3">
+      <button class="btn btn-primary mx-2" (click)="triggerSnapshot()">Take</button>
     </div>
   </div>
 
+  <!-- Form Section -->
+  <form class="mt-4">
+    <!-- Date Field -->
+    <div class="mb-3">
+      <label for="date" class="form-label">Fecha:</label>
+      <input type="text" id="date" class="form-control" [value]="date" readonly>
+    </div>
 
-  <div class="snapshot" *ngIf="webcamImage">
-    <h2>Nice one!</h2>
-    <img [src]="webcamImage.imageAsDataUrl"/>
+    <!-- GPS Location -->
+    <div class="mb-3">
+      <label class="form-label">GPS LOCATION:</label>
+      <input type="text" class="form-control" [value]="currentLatitude + ', ' + currentLongitude" readonly>
+    </div>
+
+    <!-- Address -->
+    <div class="mb-3">
+      <label class="form-label">ADDRESS:</label>
+      <input type="text" class="form-control" [value]="suburb + ' ' + road + ' ' + county + ' ' + city + ' ' + postcode + ' ' + state" >
+    </div>
+
+    <!-- PED Type Select -->
+    <div class="mb-3">
+      <label for="ped-type" class="form-label">Select PED TYPE</label>
+      <select id="ped-type" class="form-select" (change)="onPedTypeChange($event)">
+        <option value="1">FLOWER POT - 9X10</option>
+        <option value="2">BOX - 13-24 GREEN</option>
+        <option value="3">VAULT - 12X12 CEMENT</option>
+        <option value="4">VAULT - 13X24 CEMENT</option>
+        <option value="5">VAULT - 17X30 CEMENT</option>
+      </select>
+    </div>
+
+    <!-- Trench Radio Buttons -->
+    <div class="mb-3">
+      <label class="form-label">TRENCH</label>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="trench" id="trench-yes" value="yes">
+        <label class="form-check-label" for="trench-yes">YES</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="trench" id="trench-no" value="no" checked>
+        <label class="form-check-label" for="trench-no">NO</label>
+      </div>
+    </div>
+
+    <!-- Trench Footage -->
+    <div class="mb-3">
+      <label for="trench-footage" class="form-label">TRENCH FOOTAGE</label>
+      <textarea class="form-control" id="trench-footage" rows="3"></textarea>
+    </div>
+  </form>
+
+  <!-- Uploaded Files Table -->
+  <div class="text-center">
+    <div *ngIf="uploadedFiles.length > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">File Name</th>
+            <th scope="col">Support</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let file of uploadedFiles">
+            <td>{{ file.id }}</td>
+            <td>{{ file.name }}</td>
+            <td>{{ file.support }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Webcam Toggle Button -->
+    <div class="mt-3">
+      <button *ngIf="!showWebcam" class="btn btn-primary mx-2" (click)="toggleWebcam()"> Open Cam</button>
+    </div>
+
+    <!-- Snapshot Preview -->
+    <div class="snapshot mt-4" *ngIf="webcamImageWithText">
+      <div class="mb-3">
+        <img [height]="webcamHeight / 1.5" [width]="webcamWidth" [src]="webcamImageWithText" class="img-fluid" />
+      </div>
+      <div class="mb-3">
+        <select id="support" class="form-select" (change)="onSupportChange($event)">
+          <option selected>Select an option...</option>
+          <option value="1">PED / VAULT - OPEN - MUST HAVE ROCK AND CONDUIT TRIMMED OUT</option>
+          <option value="2">PED / VAULT - CLOSED WITH BOLTS INSTALLED</option>
+          <option value="3">PED / VAULT - AREA</option>
+          <option value="4">TRENCH PICTURE BEFORE</option>
+          <option value="5">TRENCH PICTURE AFTER WITH MEASUREMENTS</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <button class="btn btn-primary mx-2" (click)="addFile()" [disabled]="!isSupportSelected">Add File</button>
+      </div>
+    </div>
+
+    <!-- Error Messages -->
+    <div *ngIf="errors.length > 0" class="alert alert-warning mt-4">
+      <h4>Messages:</h4>
+      <ul *ngFor="let error of errors">
+        <li>{{ error | json }}</li>
+      </ul>
+    </div>
   </div>
-
-  <h4 *ngIf="errors.length > 0">Messages:</h4>
-  <ul *ngFor="let error of errors">
-    <li>{{error | json}}</li>
-  </ul>
+  <div class="text-center mt-4">
+    <button class="btn btn-success" (click)="saveData()">Save</button>
+  </div>
+  <div class="text-center mt-4">
+    <button class="btn danger" (click)="return()">Cancel</button>
+  </div>
 </div>
-

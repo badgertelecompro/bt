@@ -1,0 +1,10 @@
+{
+  "/api": {
+    "target": "https://us-east-1.aws.data.mongodb-api.com/app/data-aqbfuqg/endpoint/data/v1",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    }
+  }
+}
