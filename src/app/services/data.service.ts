@@ -6,7 +6,7 @@ import { Observable, catchError } from 'rxjs';
   providedIn: 'root'
 })
 export class DataService {
-  private apiUrl = '/api';
+  private apiUrl = 'https://us-east-1.aws.data.mongodb-api.com/app/data-aqbfuqg/endpoint/data/v1';
   private apiKey = 'eVTThRcbO8zEnNof21NKcDYyui6qPQ15E8exNWxbPiKHBjA58P1yDCyVIwzKxrER'; // Reemplaza con tu clave API
 
   constructor(private http: HttpClient) { }
