@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1719555173604,
+  "timestamp": 1719966667135,
   "index": "./index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "./favicon.ico",
         "./index.html",
-        "./main-ZWWYWC27.js",
+        "./main-G6URXM3I.js",
         "./manifest.webmanifest",
         "./polyfills-6EAL64PA.js",
         "./styles-5INURTSO.css"
@@ -38,7 +38,8 @@
       "name": "data-api",
       "patterns": [
         "https:\\/\\/cdn\\.jsdelivr\\.net\\/npm\\/bootstrap@5\\.3\\.3\\/dist\\/js\\/bootstrap\\.bundle\\.min\\.js",
-        "https:\\/\\/cdn\\.jsdelivr\\.net\\/npm\\/bootstrap@5\\.3\\.3\\/dist\\/css\\/bootstrap\\.min\\.css"
+        "https:\\/\\/cdn\\.jsdelivr\\.net\\/npm\\/bootstrap@5\\.3\\.3\\/dist\\/css\\/bootstrap\\.min\\.css",
+        "https:\\/\\/nominatim\\.openstreetmap\\.org\\/reverse"
       ],
       "strategy": "freshness",
       "maxSize": 5,
@@ -53,8 +54,8 @@
   "hashTable": {
     "./assets/icons/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
     "./favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
-    "./index.html": "8e103667d391e76b44592693e92fdb26dc8ea5ea",
-    "./main-ZWWYWC27.js": "09e720947f773cacadeceb0d7fc9c6e4dcf86d09",
+    "./index.html": "7d6584a34079a0b3812f9c814b8635d6f81e22bd",
+    "./main-G6URXM3I.js": "bdcfafde1ab6ffb92516078f4c37274d84c6e99a",
     "./manifest.webmanifest": "a1317ff145b9a625e739d2f5f37d9b456bc807b5",
     "./polyfills-6EAL64PA.js": "d874147a12a6570d9b44e99935e9de8b7f3cabbc",
     "./styles-5INURTSO.css": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
