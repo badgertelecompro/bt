@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import {getStorage,ref,uploadBytes } from 'firebase/storage';
+import {getDownloadURL, getStorage,ref,uploadBytes } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: "AIzaSyASq-OvD_CytkoRSNyaenrnAHx6OVHP2yY",
@@ -13,23 +12,20 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 export const storage = getStorage(app);
 
 
 export function uploadFile(file: Blob ,filePath: string ){
   const storageRef = ref(storage, filePath)
-  uploadBytes(storageRef,file).then(snapshop=>{
-    console.log(snapshop)
-  })
+  return new Promise((resolve, reject) => {
+    uploadBytes(storageRef, file).then(snapshot => {
+      getDownloadURL(storageRef).then(downloadURL => {
+        resolve(downloadURL);
+      }).catch(error => {
+        reject(error);
+      });
+    }).catch(error => {
+      reject(error);
+    });
+  });
 }
-
-// export function uploadFile2(file: Blob, filePath: string) {
-//   const storageRef = ref(storage, filePath); // Usar filePath para definir la ruta del archivo
-
-//   uploadBytes(storageRef, file).then(snapshot => {
-//     console.log('File uploaded successfully:', snapshot);
-//   }).catch(error => {
-//     console.error('Error uploading file:', error);
-//   });
-// }

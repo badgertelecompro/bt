@@ -6,51 +6,54 @@ import { Observable, catchError } from 'rxjs';
   providedIn: 'root'
 })
 export class DataService {
-  private apiUrl = 'https://us-east-1.aws.data.mongodb-api.com/app/data-aqbfuqg/endpoint/data/v1';
-  private apiKey = 'eVTThRcbO8zEnNof21NKcDYyui6qPQ15E8exNWxbPiKHBjA58P1yDCyVIwzKxrER'; // Reemplaza con tu clave API
+  // Asegúrate de que este URL apunta al servidor Express en tu entorno
+  private apiUrl = 'https://pesvi-bk.onrender.com/api'; // Cambia esto a la URL de tu servidor en producción
 
   constructor(private http: HttpClient) { }
 
-  // Configurar los encabezados para la autenticación
+  // Configurar los encabezados (si es necesario, puedes eliminar la API key si no es requerida por tu servidor)
   private getHeaders() {
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'api-key': this.apiKey,
+      'Accept': 'application/json'
     });
   }
 
-  // Ejemplo: Obtener datos de una colección
-  getCollectionData(collectionName: string, databaseName: string, dataSource: string,filter:string): Observable<any> {
+  // Obtener datos de una colección
+  getCollectionData(collectionName: string, databaseName: string, filter: string): Observable<any> {
     const endpoint = `${this.apiUrl}/action/find`;
-    const body = {
-      collection: collectionName,
-      database: databaseName,
-      dataSource: dataSource,
-      filter: {
-        email: filter
-      }
-    };
+    let body = {};
+    filter
+    if(filter === "ADMIN@GMAIL.COM"){
+      body = {
+        collection: collectionName,
+        database: databaseName
+      };
+    }else{
+      body = {
+        collection: collectionName,
+        database: databaseName,
+        filter: {
+          email: filter
+        }
+      };
+    }
     return this.http.post(endpoint, body, { headers: this.getHeaders() }).pipe(
       catchError(error => {
-        console.log(error)
-        throw error
+        console.log(error);
+        throw error;
       })
     );
   }
 
-  // Ejemplo: Insertar datos en una colección
-  insertData(collectionName: string, databaseName: string, dataSource: string, data: any): Observable<any> {
+  insertData(collectionName: string, databaseName: string, data: any): Observable<any> {
     const endpoint = `${this.apiUrl}/action/insertOne`;
     const body = {
-      "collection": collectionName,
-      "database": databaseName,
-      "dataSource": dataSource,
-      "document": data
+      collection: collectionName,
+      database: databaseName,
+      document: data
     };
 
     return this.http.post(endpoint, body, { headers: this.getHeaders() });
   }
-
-  // Puedes añadir más métodos para diferentes acciones en la API
 }

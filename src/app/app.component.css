@@ -10,3 +10,10 @@
   font-size: 2rem; /* Tamaño de fuente */
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* Sombra del texto */
 }
+.logo-img {
+  max-width: 100px; /* Ajusta el tamaño máximo del logo */
+  height: auto; /* Mantén la proporción original del logo */
+  border-radius: 30%; /* Hace que los bordes sean redondos */
+  display: block; /* Asegura que el logo se centre correctamente */
+  margin: 0 auto; /* Centra el logo horizontalmente */
+}

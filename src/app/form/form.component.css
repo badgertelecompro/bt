@@ -1,7 +1,4 @@
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-}
+
 
 .form-label {
   font-weight: bold;
@@ -21,17 +18,31 @@
 /* styles.css o tu archivo de estilos */
 .table-responsive {
   overflow-x: auto;
-  max-width: 100%;
+  max-width: 100%; /* Asegura que la tabla no se corte en dispositivos pequeños */
+  padding: 10px; /* Espacio adicional para evitar que los contenidos se vean muy apretados */
 }
 
 .table {
-  width: 100%;
-  max-width: 100%;
+  width: 100%; /* Ocupa todo el ancho disponible */
+  max-width: none; /* Elimina la restricción de ancho máximo */
+  table-layout: auto; /* Permite que las columnas se ajusten automáticamente según su contenido */
+}
+
+.table th, .table td {
+  padding: 10px; /* Espacio adecuado para cada celda */
+  text-align: left; /* Alineación del texto a la izquierda */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+}
+
+.long-column {
+  min-width: 300px; /* Asegura un ancho mínimo para la columna de descargas */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
 }
 
 @media (max-width: 768px) {
   .table-responsive {
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch; /* Mejora la experiencia de desplazamiento en dispositivos móviles */
   }
 }
+

@@ -56,19 +56,22 @@
       <table *ngIf="documents && documents.length > 0" class="table table-striped">
         <thead>
           <tr>
+            <th>OciusX</th>
             <th>Date</th>
             <th>Address</th>
-            <th>Email</th>
             <th>Name</th>
-            <th>GPS Location</th>
+            <th>Email</th>
             <th>Ped Type</th>
             <th>Trench</th>
             <th>Trench Footage</th>
+            <th>GPS Location</th>
             <th>File Path</th>
+            <th>Download Links</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let document of documents">
+            <td>{{ document.OciusX }}</td>
             <td>{{ document.date }}</td>
             <td>{{ document.address }}</td>
             <td>{{ document.email }}</td>
@@ -78,10 +81,20 @@
             <td>{{ document.trench }}</td>
             <td>{{ document.trenchFootage }}</td>
             <td>{{ document.filePath }}</td>
+            <td style="width: 300px;">
+              <ul *ngIf="document.downloadURLs && document.downloadURLs.length > 0">
+                <li *ngFor="let link of document.downloadURLs">
+                  <a [href]="link.url" [download]="link.name">{{ link.name }}</a>
+                </li>
+              </ul>
+            </td>
+             <!-- Aquí se muestran los enlaces de descarga -->
           </tr>
         </tbody>
       </table>
     </div>
-    <button (click)="onSumit()" class="btn btn-primary btn-register">Register New Job</button>
+    <div class="text-center mb-3">
+      <button (click)="onSumit()" class="btn btn-primary btn-register">Register New Job</button>
+    </div>
   </div>
 </div>

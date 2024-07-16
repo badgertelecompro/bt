@@ -15,7 +15,6 @@ export class FormComponent  implements OnInit{
   name: string = '';
   email: string = '';
   databaseName = 'btp';
-  dataSource = 'Cluster0';
   documents: any[] = [];
   showSyncButton: boolean = false;
 
@@ -32,40 +31,32 @@ export class FormComponent  implements OnInit{
   checkLocalStorage(): void {
     this.showSyncButton = localStorage.getItem('storedWork') !== null;
   }
-  onSet() {
+  onSet()  {
     this.globalDataService.setName(this.name);
-    this.globalDataService.setEmail(this.email);
+    this.globalDataService.setEmail(this.email.toUpperCase());
     const collectionName = 'works';
     const databaseName = this.databaseName;
-    const dataSource = this.dataSource;
-    if(databaseName && dataSource)
-      this.dataService.getCollectionData(collectionName, databaseName, dataSource,this.globalDataService.getEmail() )
-      .subscribe(
-        response => {
-        if (response.documents) {
-          this.documents = response.documents;
-        } else {
-          this.documents = response; // Si no, asigna la respuesta directamente
-        }
+    if(databaseName ){
+      this.dataService.getCollectionData(collectionName, databaseName, this.globalDataService.getEmail() )
+      .subscribe({
+        next: response => {
+          this.documents = response;
         },
-        error => console.error('Error al consultar:', error)
-      );
+        error: err => {
+          console.log(err)
+        },
+        complete: () => console.log('')
+      });
+    }
     this.ShowUser=false;
   }
-
-  checkData() {
-    console.log('Nombre:', this.globalDataService.getName());
-    console.log('Correo:', this.globalDataService.getEmail());
-    this.ShowUser = false;
-    this.syncData();
-  }
-
   syncData(): void {
     if (navigator.onLine) {
       const storedwork = JSON.parse(localStorage.getItem('storedWork') || '[]');
       storedwork.forEach((item: any) => {
         const formData = {
           email: item.offformData.email,
+          OciusX: item.offformData.OciusX,
           date: item.offformData.date,
           name: item.offformData.name,
           gpsLocation: item.offformData.gpsLocation,
@@ -77,17 +68,20 @@ export class FormComponent  implements OnInit{
           uploadedFiles: item.offformData.uploadedFiles,
           filePath: item.offformData.filePath
         };
-        const collectionName = 'works';
-        const databaseName = this.databaseName;
-        const dataSource = this.dataSource;
-        const {uploadedFiles, ...saveformData} = formData;
-        if(databaseName && dataSource)
-          this.dataService.insertData(collectionName, databaseName, dataSource, saveformData)
-          .subscribe(
-            response => console.log('Inserción exitosa:', response),
-            error => console.error('Error al insertar:', error)
-          );
-        uploadedFiles.forEach((element: { name:string;image: string; }) => {
+        this.onlineSave (formData);
+        this.removeFromLocalStorage(item.offformData.workId);
+      });
+
+    }
+  }
+
+  async onlineSave (formData:any){
+    const collectionName = 'works';
+    const databaseName = this.databaseName;
+    const {uploadedFiles, ...saveformData} = formData;
+    if(databaseName ){
+      try {
+        const downloadURLs: { name: string; url: string; }[] = await Promise.all(uploadedFiles.map(async (element: { name: string; image: string; }) => {
           const byteString = atob(element.image.split(',')[1]);
           const mimeString = element.image.split(',')[0].split(':')[1].split(';')[0];
           const ab = new ArrayBuffer(byteString.length);
@@ -96,11 +90,24 @@ export class FormComponent  implements OnInit{
             ia[i] = byteString.charCodeAt(i);
           }
           const blob = new Blob([ab], { type: mimeString });
-          uploadFile(blob,`${formData.filePath}/${element.name}`);
+          const downloadURL = await uploadFile(blob, `${formData.filePath}/${element.name}`) as string;
+          return { name: element.name, url: downloadURL };
+        }));
+        const dataToInsert = {
+          ...saveformData,
+          downloadURLs
+        };
+        this.dataService.insertData(collectionName, databaseName, dataToInsert)
+        .subscribe({
+          next: response => {},
+          error: err => {
+            console.log(err)
+          },
+          complete: () => console.log('')
         });
-        this.removeFromLocalStorage(item.offformData.workId);
-      });
-
+      } catch (error) {
+        console.error('Error en la subida de archivos o inserción de datos:', error);
+      }
     }
   }
   removeFromLocalStorage(fileId: number): void {
@@ -111,7 +118,20 @@ export class FormComponent  implements OnInit{
   }
 
   exportToExcel(): void {
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.documents);
+    const dataToExport = this.documents.map(document => ({
+      Date: document.date,
+      Address: document.address,
+      OciusX: document.OciusX,
+      Email: document.email,
+      Name: document.name,
+      "Ped Type": document.pedType,
+      Trench: document.trench,
+      "Trench Footage": document.trenchFootage,
+      "GPS Location": document.gpsLocation,
+      "File Path": document.filePath,
+      "Download Links": document.downloadURLs.map((link: { url: any; }) => link.url).join(', ') // Concatenar URLs de descarga
+    }));
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     this.saveAsExcelFile(excelBuffer, 'jobs_data');
